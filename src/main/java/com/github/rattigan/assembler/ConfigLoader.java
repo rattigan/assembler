@@ -3,12 +3,14 @@ package com.github.rattigan.assembler;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.rattigan.nonstd.seq.Seq;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 import java.util.Map;
+
+import static com.github.rattigan.nonstd.seq.Seq.seq;
 
 /**
  */
@@ -22,13 +24,13 @@ public class ConfigLoader {
         return mapper;
     }
 
-    public static Iterable<Component> loadConfig(String yaml) throws AssemblerException {
+    public static List<Component> loadConfig(String yaml) throws AssemblerException {
         Yaml parser = new Yaml();
         Map<String, Object> map = (Map<String, Object>) parser.loadAs(yaml, Object.class);
-        return Seq.of(map).to(ConfigLoader::loadConfig);
+        return seq(map).to(ConfigLoader::loadConfigEntry).asList();
     }
 
-    private static Component loadConfig(String className, Object configuration) {
+    private static Component loadConfigEntry(String className, Object configuration) {
         Writer writer = new StringWriter();
         try {
             Class type = Thread.currentThread().getContextClassLoader().loadClass(className);

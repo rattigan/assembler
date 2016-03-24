@@ -2,8 +2,5 @@ package com.github.rattigan.assembler;
 
 /**
  */
-public class Component {
-
-
-
+public class Dependency {
 }

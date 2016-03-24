@@ -18,6 +18,9 @@ dependencies {
     // promises
     compile 'com.github.rattigan.nonstd:promises:-SNAPSHOT'
 
+    // dependency injection
+    compile 'com.google.inject:guice:4.0'
+
     // yaml
     compile 'org.yaml:snakeyaml:1.17'
 

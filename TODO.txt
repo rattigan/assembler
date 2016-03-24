@@ -1,0 +1,20 @@
+Graph of export and import objects
+Each module has an export and and import object (which may be empty)
+Step 1 - determine dependencies between components (based on annotations on import and export objects)
+Step 2 start components that have no dependencies
+Step 3 each time a component starts up, create a child injector containing all the exported objects as bindings
+Step 4 remove started components and go to step 2
+
+problems:
+1, how to determine dependencies?
+2, can child modules export additional bindings for the same type? (e.g. for multibindings)
+Elements
+
+Maybe PrivateModules can be used for this.
+
+Each component exposes a set of shared objects
+
+
+1. There is a set of import objects that guice can inject
+2. If these are in some parent module, with all components in a child module
+
