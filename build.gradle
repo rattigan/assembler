@@ -20,6 +20,7 @@ dependencies {
 
     // dependency injection
     compile 'com.google.inject:guice:4.0'
+    compile 'com.google.inject.extensions:guice-multibindings:4.0'
 
     // yaml
     compile 'org.yaml:snakeyaml:1.17'
@@ -30,11 +31,23 @@ dependencies {
 
     // logging
     compile 'org.slf4j:slf4j-api:1.7.16'
+    testCompile 'ch.qos.logback:logback-classic:1.1.5'
+    testCompile 'org.slf4j:slf4j-api:1.7.16'
+    testCompile 'org.slf4j:jcl-over-slf4j:1.7.16'
+    testCompile 'org.slf4j:log4j-over-slf4j:1.7.16'
+    testCompile 'org.slf4j:jul-to-slf4j:1.7.16'
 
     // unit testing
     testCompile 'org.testng:testng:6.9.10'
     testCompile 'org.assertj:assertj-core:3.3.0'
 }
+
+configurations {
+    // exclude any transitively included logging libs
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+    all*.exclude group: 'log4j', module: 'log4j'
+}
+
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'

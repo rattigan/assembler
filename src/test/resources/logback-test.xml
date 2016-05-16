@@ -1,0 +1,3 @@
+<configuration debug="true">
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+</configuration>

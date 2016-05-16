@@ -18,3 +18,13 @@ Each component exposes a set of shared objects
 1. There is a set of import objects that guice can inject
 2. If these are in some parent module, with all components in a child module
 
+
+
+
+<Component, Key, Binding>
+Merge all exposes bindings
+
+
+Create Component
+Get module
+- bind must bind add provider bindings for all injected fields of the Component

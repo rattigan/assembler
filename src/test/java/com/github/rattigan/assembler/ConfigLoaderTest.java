@@ -1,5 +1,7 @@
 package com.github.rattigan.assembler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.List;
 /**
  */
 public class ConfigLoaderTest {
+    private static final Logger log = LoggerFactory.getLogger(ConfigLoaderTest.class);
+
     public static class Foo extends Component {
         private String bar;
         private int baz;
@@ -35,7 +39,7 @@ public class ConfigLoaderTest {
         Iterable<Component> components = ConfigLoader.loadConfig(config);
 
         for (Component component : components) {
-            System.out.println(component);
+            log.info(component.toString());
         }
 
     }
