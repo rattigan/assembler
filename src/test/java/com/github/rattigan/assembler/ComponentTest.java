@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 import java.util.Map;
 import java.util.Set;
 
-import static com.github.rattigan.nonstd.seq.Seq.seq;
+import static com.github.rattigan.nonstd.seq.Seq.seqOf;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
@@ -76,8 +76,17 @@ public class ComponentTest {
                     .build();
 
             mapBinder.addBinding("Bye").toInstance("Barry");
-
         }
+
+//        @Override
+//        void start() {
+//            throw new RuntimeException("start");
+//        }
+//
+//        @Override
+//        void stop() {
+//            throw new RuntimeException("stop");
+//        }
     }
 
     public static class C extends Component {
@@ -92,9 +101,12 @@ public class ComponentTest {
 
     @Test
     public void test() {
-        Assembly assembly = new Assembly(seq(new A(), new B(), new C()));
-        assembly.start().get();
-        assembly.stop().get();
+        Assembly assembly = new Assembly(seqOf(new A(), new B(), new C()));
+        try {
+            assembly.start().get();
+        } finally {
+            assembly.stop().get();
+        }
         log.info("ooh");
     }
 }

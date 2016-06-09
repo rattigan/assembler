@@ -1,5 +1,6 @@
 package com.github.rattigan.assembler;
 
+import com.github.rattigan.nonstd.seq.Seq;
 import com.google.inject.Key;
 import com.google.inject.PrivateModule;
 import com.google.inject.TypeLiteral;
@@ -20,18 +21,9 @@ import static com.github.rattigan.nonstd.seq.Seq.set;
 
 /**
  */
-public abstract class Component<T> extends PrivateModule {
-    private T config;
+public abstract class Component extends PrivateModule {
     private Set<InjectionPoint> injectionPoints =
             InjectionPoint.forInstanceMethodsAndFields(this.getClass());
-
-    void setConfig(T config) {
-        this.config = config;
-    }
-
-    public T getConfig() {
-        return config;
-    }
 
     @Override
     protected final void configure() {
@@ -40,9 +32,9 @@ public abstract class Component<T> extends PrivateModule {
     }
 
     public Set<Key<?>> getImports() {
-        return seq(injectionPoints)
-                .to(it -> it.getDependencies().get(0).getKey())
-                .collect(set());
+        Seq<Key<?>> to = seq(injectionPoints)
+                .to(it -> it.getDependencies().get(0).getKey());
+        return to.collect(set());
     }
 
     private void bindComponentInjections() {

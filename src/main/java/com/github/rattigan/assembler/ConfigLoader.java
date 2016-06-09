@@ -10,8 +10,8 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.rattigan.nonstd.seq.Seq.biseq;
 import static com.github.rattigan.nonstd.seq.Seq.list;
-import static com.github.rattigan.nonstd.seq.Seq.seq;
 
 /**
  */
@@ -28,7 +28,7 @@ public class ConfigLoader {
     public static List<Component> loadConfig(String yaml) throws AssemblerException {
         Yaml parser = new Yaml();
         Map<String, Object> map = (Map<String, Object>) parser.loadAs(yaml, Object.class);
-        return seq(map).to(ConfigLoader::loadConfigEntry).collect(list());
+        return biseq(map).to(ConfigLoader::loadConfigEntry).collect(list());
     }
 
     private static Component loadConfigEntry(String className, Object configuration) {
