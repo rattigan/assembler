@@ -16,22 +16,29 @@ import static com.github.rattigan.nonstd.seq.Seq.list;
 /**
  */
 public class ConfigLoader {
-    private static ObjectMapper mapper = createMapper();
+    private final ObjectMapper mapper;
 
-    private static ObjectMapper createMapper() {
-        ObjectMapper mapper = new ObjectMapper();
+    public ConfigLoader() {
+        this(new ObjectMapper());
+    }
+
+    public ConfigLoader(ObjectMapper mapper) {
+        this.mapper = mapper;
+        configMapper(mapper);
+    }
+
+    private void configMapper(ObjectMapper mapper) {
         // allow private fields to be written
         mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-        return mapper;
     }
 
-    public static List<Component> loadConfig(String yaml) throws AssemblerException {
+    public List<Component> loadConfig(String yaml) throws AssemblerException {
         Yaml parser = new Yaml();
         Map<String, Object> map = (Map<String, Object>) parser.loadAs(yaml, Object.class);
-        return biseq(map).to(ConfigLoader::loadConfigEntry).collect(list());
+        return biseq(map).to(this::loadConfigEntry).collect(list());
     }
 
-    private static Component loadConfigEntry(String className, Object configuration) {
+    private Component loadConfigEntry(String className, Object configuration) {
         Writer writer = new StringWriter();
         try {
             Class type = Thread.currentThread().getContextClassLoader().loadClass(className);

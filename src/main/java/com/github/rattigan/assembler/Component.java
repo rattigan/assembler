@@ -1,5 +1,6 @@
 package com.github.rattigan.assembler;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.rattigan.nonstd.seq.Seq;
 import com.google.inject.Key;
 import com.google.inject.PrivateModule;
@@ -22,6 +23,7 @@ import static com.github.rattigan.nonstd.seq.Seq.set;
 /**
  */
 public abstract class Component extends PrivateModule {
+    @JsonIgnore
     private Set<InjectionPoint> injectionPoints =
             InjectionPoint.forInstanceMethodsAndFields(this.getClass());
 
