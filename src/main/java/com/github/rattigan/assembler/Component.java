@@ -21,6 +21,7 @@ import static com.github.rattigan.nonstd.seq.Seq.seq;
 import static com.github.rattigan.nonstd.seq.Seq.set;
 
 /**
+ *
  */
 public abstract class Component extends PrivateModule {
     @JsonIgnore
