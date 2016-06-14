@@ -55,9 +55,9 @@ public abstract class Component extends PrivateModule {
 
     protected void configureComponent() {};
 
-    void start() {}
+    public void start() {}
 
-    void stop() {}
+    public void stop() {}
 
 
     protected class MultibindingBuilder<T> {

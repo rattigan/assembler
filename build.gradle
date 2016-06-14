@@ -26,8 +26,8 @@ dependencies {
     compile 'org.yaml:snakeyaml:1.17'
 
     // json
-    compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.0.rc1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.0.rc1'
 
     // logging
     compile 'org.slf4j:slf4j-api:1.7.16'
