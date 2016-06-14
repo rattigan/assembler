@@ -223,9 +223,14 @@ public class Assembly implements AutoCloseable {
     }
 
     private void startUnblockedComponents() {
-        biseq(start.predecessors)
-                .where((__, blockers) -> blockers.isEmpty())
-                .forEach((component, __) -> startComponent(component));
+        lock.lock();
+        try {
+            biseq(start.predecessors)
+                    .where((__, blockers) -> blockers.isEmpty())
+                    .forEach((component, __) -> startComponent(component));
+        } finally {
+            lock.unlock();
+        }
     }
 
     private void startUnblockedComponents(Component startedComponent) {
@@ -273,14 +278,11 @@ public class Assembly implements AutoCloseable {
                 }
                 if (state.get() == STARTING) {
                     if (start.finishedComponents.size() == components.size()) {
-                        log.info("All components have startGraph.finished");
+                        log.info("All components have started");
                         start.finished.resolve();
                     } else {
                         startUnblockedComponents(component);
-                        if (start.activeComponents.isEmpty()) {
-                            log.error("Startup is deadlocked");
-                            start.finished.reject(getStartupDeadlockException());
-                        }
+                        checkForStartupDeadlock();
                     }
                 } else {
                     // only reject once all starting components have completed or been canceled
@@ -295,10 +297,23 @@ public class Assembly implements AutoCloseable {
         });
     }
 
+    private void checkForStartupDeadlock() {
+        if (start.finishedComponents.size() < components.size() &&
+                start.activeComponents.isEmpty()) {
+            log.error("Startup is deadlocked");
+            start.finished.reject(getStartupDeadlockException());
+        }
+    }
+
     private void stopUnblockedComponents() {
-        biseq(stop.predecessors)
-                .where((__, blockers) -> blockers.isEmpty())
-                .forEach((component, __) -> stopComponent(component));
+        lock.lock();
+        try {
+            biseq(stop.predecessors)
+                    .where((__, blockers) -> blockers.isEmpty())
+                    .forEach((component, __) -> stopComponent(component));
+        } finally {
+            lock.unlock();
+        }
     }
 
     private void stopUnblockedComponents(Component stoppedComponent) {
@@ -341,7 +356,7 @@ public class Assembly implements AutoCloseable {
                                 new AssemblerException("Error stopping component " + component, t)));
                     }
                     if (stop.finishedComponents.size() == components.size()) {
-                        log.info("All components have stopGraph.finished");
+                        log.info("All components have stopped");
                         if (stop.errors.isEmpty()) {
                             stop.finished.resolve();
                         } else {
@@ -349,10 +364,7 @@ public class Assembly implements AutoCloseable {
                         }
                     } else {
                         stopUnblockedComponents(component);
-                        if (stop.activeComponents.isEmpty()) {
-                            log.error("Shutdown is deadlocked");
-                            start.finished.reject(getShutdownDeadlockException());
-                        }
+                        checkForShutdownDeadlock();
                     }
                 } finally {
                     lock.unlock();
@@ -367,6 +379,19 @@ public class Assembly implements AutoCloseable {
             } finally {
                 lock.unlock();
             }
+        }
+    }
+
+    private void checkForShutdownDeadlock() {
+        lock.lock();
+        try {
+            if (stop.finishedComponents.size() < components.size() &&
+                stop.activeComponents.isEmpty()) {
+                log.error("Shutdown is deadlocked");
+                stop.finished.reject(getShutdownDeadlockException());
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
