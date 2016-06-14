@@ -36,7 +36,7 @@ public class ConfigLoaderTest {
                 .replace("Foo", Foo.class.getName())
                 .replace("Bar", Foo.class.getName());
 
-        Iterable<Component> components = ConfigLoader.loadConfig(config);
+        Iterable<Component> components = new ConfigLoader().loadConfig(config);
 
         for (Component component : components) {
             log.info(component.toString());

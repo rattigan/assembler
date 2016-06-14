@@ -11,7 +11,7 @@ public class TestComponent extends Component {
     private String message;
 
     @Override
-    void start() {
+    public void start() {
         log.info(message);
     }
 }
