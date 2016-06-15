@@ -3,10 +3,7 @@ package com.github.rattigan.assembler;
 import com.github.rattigan.nonstd.futures.Deferred;
 import com.github.rattigan.nonstd.futures.Promise;
 import com.github.rattigan.nonstd.seq.Seq;
-import com.google.inject.Binding;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
+import com.google.inject.*;
 import com.google.inject.spi.DefaultElementVisitor;
 import com.google.inject.spi.Element;
 import com.google.inject.spi.Elements;
@@ -252,7 +249,7 @@ public class Assembly implements AutoCloseable {
             log.debug("Injecting component " + component);
             // inject dependencies and then start the component
             injectComponent(component);
-            injectors.put(component, Guice.createInjector(component));
+            injectors.put(component, Guice.createInjector(Stage.PRODUCTION, component));
             log.debug("Starting component " + component);
             component.start();
         });
