@@ -202,7 +202,7 @@ public class Assembly implements AutoCloseable {
     public Promise<Void> start() {
         transition(STARTING);
         startUnblockedComponents();
-        return start.finished.alwaysRun(() -> {
+        return start.finished.tapAlways(() -> {
             transition(STARTED);
             readyForStop.resolve();
         });
@@ -210,11 +210,11 @@ public class Assembly implements AutoCloseable {
 
     public Promise<Void> stop() {
         abortStart();
-        readyForStop.alwaysRun(() -> {
+        readyForStop.tapAlways(() -> {
             transition(STOPPING);
             stopUnblockedComponents();
         });
-        return stop.finished.alwaysRun(() -> {
+        return stop.finished.tapAlways(() -> {
             transition(STOPPED);
         });
     }
